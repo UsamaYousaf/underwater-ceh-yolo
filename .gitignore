@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Conda / venv
+.env
+.venv
+conda-env/
+
+# Datasets (DO NOT COMMIT)
+datasets/
+data/
+*.zip
+*.tar
+*.tar.gz
+
+# Ultralytics outputs
+runs/
+weights/
+*.pt
+
+# Logs
+logs/
+wandb/
+
+# OS
+.DS_Store
