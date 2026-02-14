@@ -3,10 +3,16 @@ __pycache__/
 *.pyc
 *.pyo
 
-# Conda / venv
+# Virtual environments
 .env
 .venv
 conda-env/
+
+# VSCode
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
 
 # Datasets (DO NOT COMMIT)
 datasets/
@@ -15,14 +21,27 @@ data/
 *.tar
 *.tar.gz
 
-# Ultralytics outputs
+# Model outputs
 runs/
 weights/
 *.pt
+*.onnx
 
 # Logs
 logs/
 wandb/
+lightning_logs/
+events.out.tfevents.*
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Cache
+.cache/
 
 # OS
 .DS_Store
+.AppleDouble
+.LSOverride
