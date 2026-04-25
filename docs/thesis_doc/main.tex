@@ -1,0 +1,216 @@
+\documentclass[12pt]{article}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+%%%%%%%%%%
+%packages%
+%%%%%%%%%%
+\usepackage[english]{babel}
+\usepackage[absolute,overlay]{textpos}
+\usepackage[giveninits=true,sorting=none,style=numeric,maxbibnames=5]{biblatex}
+\usepackage{csquotes}
+\addbibresource{Sources.bib}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{setspace}
+
+%--------------------------------------------%
+%--------EDIT CONTENTS OF THIS BLOCK---------%
+%--------------------------------------------%
+
+\newcommand{\TITLE}{
+\textbf{\begin{spacing}{1}
+CEH-YOLO for Underwater Object Detection
+\end{spacing}}}
+
+\newcommand{\THESIS}{
+Master Thesis
+}
+
+\newcommand{\STUDYPROGRAMME}{
+Artificial Intelligence
+}
+
+\newcommand{\NAME}{
+Your Name
+}
+
+\newcommand{\DOB}{
+01 January 2000
+}
+
+\newcommand{\POB}{
+Your City
+}
+
+\newcommand{\MATRICULATIONNUMBER}{
+123456789
+}
+
+\newcommand{\FIRSTREVIEWER}{
+Prof. X
+}
+
+\newcommand{\SECONDREVIEWER}{
+Prof. Y
+}
+
+\newcommand{\ADVISER}{
+Dr. Z
+}
+
+\newcommand{\SUBMISSIONDATE}{
+April 2026
+}
+
+\newcommand{\ABSTRACT}{
+This thesis investigates the integration of CEH modules into the YOLOv8 framework for underwater object detection. The work focuses on dataset preparation, annotation conversion, model integration, and pipeline validation. Preliminary results confirm the correctness of the implementation, providing a basis for future large-scale evaluation.
+}
+
+\newcommand{\ZUSAMMENFASSUNG}{
+Diese Arbeit untersucht die Integration von CEH-Modulen in das YOLOv8-Modell zur Unterwasserobjekterkennung.
+}
+
+\newcommand{\TASKDESCRIPTION}{
+Integration and evaluation of CEH-YOLO for underwater object detection.
+}
+
+\begin{document}
+
+\pagenumbering{gobble}
+
+\begin{center}
+{\Huge \TITLE}
+\end{center}
+
+\newpage
+
+\section*{Abstract}
+\ABSTRACT
+
+\newpage
+\tableofcontents
+
+\newpage
+\pagenumbering{arabic}
+
+%---------------------------------------%
+%--------START CONTENT-------------------%
+%---------------------------------------%
+
+\section{Methodology}
+\label{sec:methodology}
+
+This section describes the implementation and experimental design of the proposed approach. The objective is to integrate CEH modules into the YOLOv8 framework and evaluate their applicability for underwater object detection.
+
+\subsection{Overall Approach}
+
+The workflow consists of the following stages:
+\begin{itemize}
+    \item selection of YOLOv8 as baseline model,
+    \item integration of CEH modules,
+    \item dataset preparation and conversion,
+    \item validation of the pipeline through sanity training.
+\end{itemize}
+
+\subsection{Baseline Model}
+
+YOLOv8 is used as the baseline object detection model. It follows a one-stage detection paradigm and consists of three main components:
+\begin{itemize}
+    \item backbone (feature extraction),
+    \item neck (feature aggregation),
+    \item head (object prediction).
+\end{itemize}
+
+\subsection{CEH Module Integration}
+
+To improve detection in underwater environments, CEH-based components were integrated into the YOLOv8 architecture:
+\begin{itemize}
+    \item High-Order Deformable Attention (HDA),
+    \item Enhanced Spatial Pyramid Pooling Fast (ESPPF).
+\end{itemize}
+
+These modules enhance feature representation and multi-scale detection capability.
+
+\subsection{Dataset Description}
+
+The dataset consists of underwater images with four object classes:
+\begin{itemize}
+    \item echinus,
+    \item starfish,
+    \item holothurian,
+    \item scallop.
+\end{itemize}
+
+The dataset includes training and validation splits.
+
+\subsection{Annotation Conversion}
+
+The original annotations were provided in COCO format and converted into YOLO format.
+
+Bounding box conversion is defined as:
+
+\begin{equation}
+x_{center} = x_{min} + \frac{w}{2}, \quad
+y_{center} = y_{min} + \frac{h}{2}
+\end{equation}
+
+\begin{equation}
+x = \frac{x_{center}}{W}, \quad
+y = \frac{y_{center}}{H}, \quad
+w = \frac{w}{W}, \quad
+h = \frac{h}{H}
+\end{equation}
+
+Final YOLO label format:
+\begin{center}
+\texttt{class x\_center y\_center width height}
+\end{center}
+
+\subsection{Dataset Structure}
+
+The dataset was organized as follows:
+\begin{itemize}
+    \item images/train
+    \item images/val
+    \item labels/train
+    \item labels/val
+\end{itemize}
+
+A \texttt{data.yaml} file defines class names and dataset paths.
+
+\subsection{Data Validation}
+
+Before training, the dataset was validated by:
+\begin{itemize}
+    \item checking label-image consistency,
+    \item verifying coordinate ranges,
+    \item removing corrupt annotations.
+\end{itemize}
+
+\subsection{Training Strategy}
+
+A sanity training run with one epoch was performed to validate the pipeline. The objective was not performance evaluation but verification of:
+\begin{itemize}
+    \item correct data loading,
+    \item proper label parsing,
+    \item successful training execution.
+\end{itemize}
+
+\subsection{Implementation Environment}
+
+The implementation was conducted using:
+\begin{itemize}
+    \item Python,
+    \item Ultralytics YOLOv8 framework,
+    \item local development environment.
+\end{itemize}
+
+\subsection{Summary}
+
+The methodology establishes a complete pipeline for integrating CEH modules into YOLOv8 and validating the system through structured preprocessing and controlled training.
+
+\newpage
+\printbibliography
+
+\end{document}
