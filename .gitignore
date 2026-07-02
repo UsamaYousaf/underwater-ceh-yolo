@@ -44,4 +44,4 @@ dist/
 # OS
 .DS_Store
 .AppleDouble
-.LSOverride
+.LSOverride*.html
