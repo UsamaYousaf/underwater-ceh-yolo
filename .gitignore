@@ -45,3 +45,7 @@ dist/
 .DS_Store
 .AppleDouble
 .LSOverride*.html
+__pycache__/
+*.pyc
+*.yaml.backup
+runs/
