@@ -26,6 +26,7 @@ from ultralytics.nn.modules import (
     SPPF,
     ESPPF,
     DAttention,
+    HDA,
     A2C2f,
     AConv,
     ADown,

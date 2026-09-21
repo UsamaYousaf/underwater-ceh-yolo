@@ -4,6 +4,8 @@ import torch.nn.functional as F
 import numpy as np
 import einops
 
+from ultralytics.nn.modules.conv import Conv
+
 
 class LayerNormProxy(nn.Module):
     """
@@ -238,3 +240,50 @@ class DAttention(nn.Module):
         y = self.proj_drop(self.proj_out(out))
 
         return y
+
+
+class HDA(nn.Module):
+    """
+    Wrapper implementing CEH-YOLO's HDA (Section 3.2 / Fig. 4): splits the input into two
+    channel-wise segments to reduce inter-channel interaction, refines each with a conv,
+    applies deformable attention (DAttention) to each independently, refines again, then
+    recombines via concatenation and a single final conv. Channel-preserving.
+
+    NOTE: this is a best-effort reconstruction from prose/figure only (no reference code
+    was released for this wrapper) — see thesis Appendix X for the documented ambiguous
+    design choices (split ratio, per-segment vs. shared attention, conv counts, recombine op).
+    """
+
+    def __init__(self, channel, q_size, n_heads=8, n_groups=4, **dattn_kwargs):
+        super().__init__()
+        if channel % 2 != 0:
+            raise ValueError(f"HDA requires an even channel count to split in half, got {channel}")
+        c_half = channel // 2
+        if c_half % n_heads != 0:
+            raise ValueError(
+                f"HDA: split channel {c_half} (= {channel}//2) must be divisible by n_heads={n_heads} "
+                f"for the inner DAttention block to build correctly."
+            )
+        self.c_half = c_half
+
+        self.refine1_a = Conv(c_half, c_half, 3)
+        self.refine1_b = Conv(c_half, c_half, 3)
+
+        self.attn_a = DAttention(c_half, q_size, n_heads=n_heads, n_groups=n_groups, **dattn_kwargs)
+        self.attn_b = DAttention(c_half, q_size, n_heads=n_heads, n_groups=n_groups, **dattn_kwargs)
+
+        self.refine2_a = Conv(c_half, c_half, 3)
+        self.refine2_b = Conv(c_half, c_half, 3)
+
+        self.final = Conv(channel, channel, 1)
+
+    def forward(self, x):
+        a, b = x.chunk(2, dim=1)
+        a = self.refine1_a(a)
+        b = self.refine1_b(b)
+        a = self.attn_a(a)
+        b = self.attn_b(b)
+        a = self.refine2_a(a)
+        b = self.refine2_b(b)
+        out = torch.cat((a, b), dim=1)
+        return self.final(out)

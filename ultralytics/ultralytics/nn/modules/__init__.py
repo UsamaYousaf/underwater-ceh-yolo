@@ -181,5 +181,5 @@ __all__ = (
     "v10Detect",
 )
 from .ceh.ESPPF import ESPPF
-from .ceh.DAttention import DAttention
+from .ceh.DAttention import DAttention, HDA
 from .ceh.CompositeDetect import CompositeDetect
