@@ -1,0 +1,11 @@
+path: datasets/coco
+
+train: images/train2017
+val: images/val2017
+
+nc: 4
+names:
+  0: echinus
+  1: starfish
+  2: holothurian
+  3: scallop
